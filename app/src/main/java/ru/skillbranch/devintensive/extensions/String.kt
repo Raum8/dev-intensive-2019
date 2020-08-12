@@ -1,5 +1,7 @@
 package ru.skillbranch.devintensive.extensions
 
+import org.jsoup.Jsoup
+
 fun String.truncate(numSymbols: Int = 16): String {
     if (this.length <= numSymbols)
         return ""
@@ -26,14 +28,14 @@ fun String.truncate(numSymbols: Int = 16): String {
 fun String.stripHtml(): String {
     if(this == "" || this == " ")
         return ""
-//    val newStr = Jsoup.parse(this).text().toString(); с помощью Jsoup изиии   in gradle implementation 'org.jsoup:jsoup:1.13.1'
-    var indexFirst = this.indexOf('<')
-    var indexLast = this.indexOf('>')
-    var newStr = this.removeRange(indexFirst..indexLast)
-    indexFirst = newStr.indexOf('<')
-    indexLast = newStr.indexOf('>')
-    newStr = newStr.removeRange(indexFirst..indexLast).trim()
-    while("  " in newStr)
-        newStr = newStr.replace("  ", " ")
+    val newStr = Jsoup.parse(this).text().toString();// с помощью Jsoup изиии   in gradle
+//    var indexFirst = this.indexOf('<')
+//    var indexLast = this.indexOf('>')
+//    var newStr = this.removeRange(indexFirst..indexLast)
+//    indexFirst = newStr.indexOf('<')
+//    indexLast = newStr.indexOf('>')
+//    newStr = newStr.removeRange(indexFirst..indexLast).trim()
+//    while("  " in newStr)
+//        newStr = newStr.replace("  ", " ")
     return newStr
 }
