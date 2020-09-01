@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <item
+        android:width="@dimen/size_btn_normal_72"
+        android:height="@dimen/size_btn_normal_72"
+        android:drawable="@drawable/ic_baseline_double_arrow_24"
+        android:gravity="center" />
+</layer-list>
