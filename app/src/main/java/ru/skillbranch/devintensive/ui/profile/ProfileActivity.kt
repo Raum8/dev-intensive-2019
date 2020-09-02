@@ -259,7 +259,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun saveProfileInfo() {
-        // не сохраняем репозиторий, если невалидный
         Profile(
             firstName = et_first_name.text.toString(),
             lastName = et_last_name.text.toString(),
@@ -271,6 +270,8 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun verifyRepository(url: String = ""): Boolean {
+        if(url.isEmpty()) return false
+        if(url.length <= 11) return true
         val res1 =  when (url.substringAfterLast('/')) {
             "enterprise", "features", "topics", "collections", "trending", "events",
             "marketplace", "pricing", "nonprofit", "customer-stories", "security",
@@ -282,7 +283,8 @@ class ProfileActivity : AppCompatActivity() {
             "https://github.com", "https://github.com/" -> true
             else -> false
         }
-        return res1 || res2
+        val res3 = url.substring(8).substringBefore('.') != "github"
+        return res1 || res2 || res3
     }
 
 }
