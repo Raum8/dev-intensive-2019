@@ -45,6 +45,7 @@ class ProfileActivity : AppCompatActivity() {
     var isEditMode = false
     lateinit var viewFields: Map<String, TextView>
 
+    @ExperimentalStdlibApi
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -146,6 +147,7 @@ class ProfileActivity : AppCompatActivity() {
         outState.putBoolean(IS_EDIT_MODE, isEditMode)
     }
 
+    @ExperimentalStdlibApi
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
@@ -158,6 +160,7 @@ class ProfileActivity : AppCompatActivity() {
         delegate.localNightMode = mode
     }
 
+    @ExperimentalStdlibApi
     @RequiresApi(Build.VERSION_CODES.N)
     private fun updateUI(profile: Profile) {
         profile.toMap().also {
@@ -183,7 +186,14 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentModel(isEditMode)
 
         btn_edit.setOnClickListener {
-            if (isEditMode) saveProfileInfo()
+            if (isEditMode) {
+                if (wr_repository.isErrorEnabled) {
+                    wr_repository.isErrorEnabled = false
+                    et_repository.setText("")
+                    saveProfileInfo()
+                } else
+                    saveProfileInfo()
+            }
             isEditMode = !isEditMode
             showCurrentModel(isEditMode)
         }
@@ -229,14 +239,13 @@ class ProfileActivity : AppCompatActivity() {
             setImageDrawable(icon)
         }
 
-        // TODO [ДОДЕЛАТЬ ВАЛИДАЦИЮ РЕПОЗИТОРИЯ]
         et_repository.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if (p0.toString().isEmpty()) {
+                if (verifyRepository(p0.toString())) {
                     wr_repository.isErrorEnabled = true
                     wr_repository.error = "Невалидный адрес репозитория"
                 } else {
@@ -259,6 +268,21 @@ class ProfileActivity : AppCompatActivity() {
         ).apply {
             viewModel.saveProfileData(this)
         }
+    }
+
+    private fun verifyRepository(url: String = ""): Boolean {
+        val res1 =  when (url.substringAfterLast('/')) {
+            "enterprise", "features", "topics", "collections", "trending", "events",
+            "marketplace", "pricing", "nonprofit", "customer-stories", "security",
+            "login", "join", "github.com", "tree", "something", " " -> true
+            else -> false
+        }
+        val res2 = when(url){
+            "www.github.com", "www.github.com/", "github.com", "github.com/",
+            "https://github.com", "https://github.com/" -> true
+            else -> false
+        }
+        return res1 || res2
     }
 
 }
