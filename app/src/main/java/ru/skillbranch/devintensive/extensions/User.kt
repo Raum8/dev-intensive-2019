@@ -7,6 +7,7 @@ import ru.skillbranch.devintensive.models.UserView
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
+@ExperimentalStdlibApi
 @RequiresApi(Build.VERSION_CODES.N)
 fun User.toUserView(): UserView {
     val nickName = Utils.transliterations("$firstName $lastName")
